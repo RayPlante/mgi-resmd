@@ -1,0 +1,35 @@
+include "json2xml-schema"; comments2doc
+{ "comments": [ "a simple comment" ] }
+{ "_ntype": "#COMM", "paras": [ "a simple comment" ] }
+
+include "json2xml-schema"; notes2doc
+{ "notes": [ "a simple comment" ] }
+[{ "_ntype": "#ELEM", "name": "xs:documentation", "content": { "children": [ "a simple comment" ] }}]
+
+include "json2xml-schema"; notes2doc
+{ }
+[]
+
+include "json2xml-schema"; description2doc
+{ "description":  "a simple comment" }
+{ "_ntype": "#ELEM", "name": "xs:documentation", "content": { "children": [ "a simple comment" ] }}
+
+include "json2xml-schema"; [description2doc]
+{ }
+[ ]
+
+include "json2xml-schema"; documentation
+{ "description": "the contact mailing address", "notes": [ "all lines go in one value", "Example: ..." ], "type": "string" }
+{ "_ntype": "#ELEM", "name": "xs:annotation", "content": { "children": [{"_ntype": "#ELEM", "name": "xs:documentation", "content": { "children": [ "the contact mailing address" ] }}, {"_ntype": "#ELEM", "name": "xs:documentation", "content": { "children": [ "all lines go in one value" ] }}, {"_ntype": "#ELEM", "name": "xs:documentation", "content": { "children": [ "Example: ..." ] }}]}}
+
+include "json2xml-schema"; documentation
+{ "description": "the contact mailing address", "type": "string" }
+{ "_ntype": "#ELEM", "name": "xs:annotation", "content": { "children": [{"_ntype": "#ELEM", "name": "xs:documentation", "content": { "children": [ "the contact mailing address" ] }}]}}
+
+include "json2xml-schema"; documentation
+{ "notes": [ "all lines go in one value", "Example: ..." ], "type": "string" }
+{ "_ntype": "#ELEM", "name": "xs:annotation", "content": { "children": [{"_ntype": "#ELEM", "name": "xs:documentation", "content": { "children": [ "all lines go in one value" ] }}, {"_ntype": "#ELEM", "name": "xs:documentation", "content": { "children": [ "Example: ..." ] }}]}}
+
+include "json2xml-schema"; makesimpleelement("name"; "0"; "1"; "xs:string")
+{ "type": "string" }
+{ "_ntype": "#ELEM", "name": "name", "content": { "children":[], "attrs": [{"_ntype": "#ATTR", "name": "type", "value": "xs:string" }, {"_ntype": "#ATTR", "name": "minoccurs", "value": "0" }, {"_ntype": "#ATTR", "name": "maxoccurs", "value": "1" }] }}
