@@ -35,9 +35,19 @@ include "xml";
 #
 #format_element(0; {})
 
-{ "name": "date", "content": { "children": [{"name": "today"}, {"name": "tomorrow", "content": { "children": ["never knows"] }}, {"name": "never", "content": { "children": ["in a million years, when hell freezes over, and the land tumbles into the sea"] }}] }, "ns": { "namespace": "urn:gurn" }} |
+#{ "name": "date", "content": { "children": [{"name": "today"}, {"name": "tomorrow", "content": { "children": ["never knows"] }}, {"name": "never", "content": { "children": ["in a million years, when hell freezes over, and the land tumbles into the sea"] }}] }, "ns": { "namespace": "urn:gurn" }} |
+#
+#format_element(0; {"style": "pretty", "max_line_length": 75, "indent": 2, "value_pad": 1})
 
-format_element(0; {"style": "pretty", "max_line_length": 75, "indent": 2, "value_pad": 1})
 
+#{ "_ntype": "#COMM", "paras": [ "The quick brown fox jumped over the lazy dogs.  The quick brown fox jumped over the lazy dogs.  The quick brown fox jumped over the lazy dogs.  The quick brown fox jumped over the lazy dogs." ] } |
+#format_comment(4; {"style": "pretty", "max_line_length": 70})
+
+include "json2xml-schema"; 
+import "xml" as xml;
+
+{ "type": "string" } |
+makesimpleelement("name"; "0"; "1"; "xs:string") |
+xml::print
 
 

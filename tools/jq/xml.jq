@@ -26,10 +26,19 @@ def context: {
     "style":  (($config|.xml.style) // "pretty")
 };
 
+def comment:
+    (strings | { "paras": [.] }),
+    (arrays  | { "paras": . }) | ._ntype = "#COMM";
+
 def _attribute(name; nsinfo): 
-   { "name": name,
-     "value": .,
-     "ns": nsinfo };
+   { "_ntype": "#ATTR",
+     "name": name,
+     "value": . } |
+   if (nsinfo|length) > 0 then
+     .ns = nsinfo
+   else
+     .
+   end;
 def _tons: 
    (objects | { prefix, namespace }),
    (strings | { namespace: . }),
@@ -104,10 +113,11 @@ def element_content(children):
 def _element(name; nsinfo): {
     "name": name,
     "ns": nsinfo,
-    "content": .
+    "content": .,
+    "_ntype": "#ELEM"
 };
 def element(name): 
-    { "name": name, "content": . };
+    { "name": name, "content": ., "_ntype": "#ELEM" };
 def element(name; nsinfo):
     (objects | _element(name; nsinfo|_tons)),
     (arrays | element_content(.) | _element(name; nsinfo|_tons)),
@@ -173,6 +183,18 @@ def add_ascontent2element(children):
 # output true if the input data is a string
 # @in any
 def isstring: textwrap::isstring;
+
+# format a comment node
+#
+def format_comment(indent; cntxt):
+    if ((cntxt|.indent//0) >= 0) and ((cntxt|.style//"compact") == "pretty") then
+       ((" " * indent)+"  -  ") as $ind | (cntxt|.max_line_length//75) as $max |
+       (cntxt|.min_line_length//30) as $min |
+       .paras | map(textwrap::fill($max; $ind; $min)) | join("\n\n") |
+       (" "*indent) + "<!--\n" + . + "\n" + (" "*indent) + "  -->"
+    else
+       "<!-- " + (.paras | join("\n")) + " -->"
+    end;
 
 # format the given text for inclusion as the content for an element.  This 
 # will fill the text to a minimum line width (controlled by the config 

@@ -13,8 +13,12 @@ def comments2doc:
 # @in   a JSON schema definition that contains description and notes items
 #
 def documentation:
-    xml::element_content( [description2doc] + notes2doc ) |
-    xml::element("xs:annotation")
+    [description2doc] + notes2doc |
+    if (.|length) > 0 then
+        xml::element_content( . ) | xml::element("xs:annotation")
+    else
+        empty
+    end
 ;
 
 # convert a JSON schema property definition to an element definition
@@ -33,12 +37,12 @@ def documentation:
 #
 def makesimpleelement(propname; minoccurs; maxoccurs; type):
     xml::element_content(
-        [ description2doc ];
-        [ type | xml::attribute("type") ] +
+        [ documentation ];
+        [ (propname | xml::attribute("name")), (type | xml::attribute("type"))] +
         [ minoccurs | xml::attribute("minoccurs") ] +
         [ maxoccurs | xml::attribute("maxoccurs") ]
     ) |
-    xml::element(propname)
+    xml::element("xs:element")
 ;
 
 def makesimpleelement(propname; minoccurs; maxoccurs):

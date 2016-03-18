@@ -122,3 +122,15 @@ include "xml"; format_element(0; { "style": "pretty", "max_line_length": 75, "in
 { "name": "date", "content": { "children": [{"name": "today"}, {"name": "tomorrow", "content": { "children": ["never knows"] }}, {"name": "never", "content": { "children": ["in a million years, when hell freezes over, and the land tumbles into the sea"] }}] }, "ns": { "namespace": "urn:gurn" }}
 "<ns1:date xmlns:ns1=\"urn:gurn\">\n  <today/>\n  <tomorrow> never knows </tomorrow>\n  <never>\n    in a million years, when hell freezes over, and the land tumbles into\n    the sea\n  </never>\n</ns1:date>"
 
+include "xml"; format_comment(4; {})
+{ "_ntype": "#COMM", "paras": [ "a short comment" ] }
+"<!-- a short comment -->"
+
+include "xml"; format_comment(4; {"style": "pretty"})
+{ "_ntype": "#COMM", "paras": [ "a short comment" ] }
+"    <!--\n      -  a short comment\n      -->"
+
+include "xml"; format_comment(4; {"style": "pretty", "max_line_length": 70})
+{ "_ntype": "#COMM", "paras": [ "The quick brown fox jumped over the lazy dogs.  The quick brown fox jumped over the lazy dogs.  The quick brown fox jumped over the lazy dogs.  The quick brown fox jumped over the lazy dogs." ] }
+"    <!--\n      -  The quick brown fox jumped over the lazy dogs.  The quick\n      -  brown fox jumped over the lazy dogs.  The quick brown fox\n      -  jumped over the lazy dogs.  The quick brown fox jumped over\n      -  the lazy dogs.\n      -->"
+

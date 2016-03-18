@@ -30,9 +30,10 @@ def wrap(width):
 # Convert a string into a newline-delimited string of lines in which each line
 # is no bigger than a given width.
 #
+# @in string:            the string to format
 # @arg width  integer:   the maximum width of a line in number of characters;
 #                          The default is given by the config parameter 
-#                          textwrap.min_line_width.
+#                          textwrap.max_line_width.
 # @arg indent integer:   the number of spaces to insert that the beginning of 
 #                          each line.  The length of each line will not exceed
 #                          width unless text after the inserted space is 
@@ -40,14 +41,27 @@ def wrap(width):
 # @arg minwidth integer: the minimum width in number of characters of the pre-
 #                          indented text for each line.  The default is given 
 #                          by the config parameter textwrap.min_line_width.
+# @out string:           the formatted string
 #
 def fill(width; indent; minwidth): 
     if (isstring|not) then error("filter fill must take a string as input") 
        else . end |
-    (width-indent) as $usewidth | 
+    (if (indent|isstring) then
+        indent
+     else
+        " " * indent
+     end) as $indstr |
+    (if (indent|isstring) then
+        indent | length
+     else
+        indent
+     end) as $indlen |
+     
+    (width-$indlen) as $usewidth | 
     (if ($usewidth < minwidth) then minwidth else $usewidth end) as $usewidth |
     gsub("\\n"; " ") |
-    wrap($usewidth) | map((" "*indent)+.) | join("\n");
+    wrap($usewidth) | map($indstr+.) | join("\n");
+    
 def fill(width; indent): context as $context |
     fill(width; indent; ($context|.min_line_width));
 def fill(width): context as $context |

@@ -30,6 +30,31 @@ include "json2xml-schema"; documentation
 { "notes": [ "all lines go in one value", "Example: ..." ], "type": "string" }
 { "_ntype": "#ELEM", "name": "xs:annotation", "content": { "children": [{"_ntype": "#ELEM", "name": "xs:documentation", "content": { "children": [ "all lines go in one value" ] }}, {"_ntype": "#ELEM", "name": "xs:documentation", "content": { "children": [ "Example: ..." ] }}]}}
 
+include "json2xml-schema"; [documentation]
+{ "type": "string" }
+[]
+
 include "json2xml-schema"; makesimpleelement("name"; "0"; "1"; "xs:string")
 { "type": "string" }
-{ "_ntype": "#ELEM", "name": "name", "content": { "children":[], "attrs": [{"_ntype": "#ATTR", "name": "type", "value": "xs:string" }, {"_ntype": "#ATTR", "name": "minoccurs", "value": "0" }, {"_ntype": "#ATTR", "name": "maxoccurs", "value": "1" }] }}
+{ "_ntype": "#ELEM", "name": "xs:element", "content": { "children":[], "attrs": [{"_ntype": "#ATTR", "name": "name", "value": "name" }, {"_ntype": "#ATTR", "name": "type", "value": "xs:string" }, {"_ntype": "#ATTR", "name": "minoccurs", "value": "0" }, {"_ntype": "#ATTR", "name": "maxoccurs", "value": "1" }] }}
+
+include "json2xml-schema"; makesimpleelement("name"; "0"; "1"; "xs:string")
+{ "type": "string", "description": "the name of the thing" }
+{ "_ntype": "#ELEM", "name": "xs:element", "content": { "children":[{"_ntype": "#ELEM", "name": "xs:annotation", "content": { "children": [ {"_ntype": "#ELEM", "name": "xs:documentation", "content": { "children": [ "the name of the thing" ] }}]}}], "attrs": [{"_ntype": "#ATTR", "name": "name", "value": "name" }, {"_ntype": "#ATTR", "name": "type", "value": "xs:string" }, {"_ntype": "#ATTR", "name": "minoccurs", "value": "0" }, {"_ntype": "#ATTR", "name": "maxoccurs", "value": "1" }] }}
+
+include "json2xml-schema"; makesimpleelement("name"; "0"; "1")
+{ "type": "string" }
+{ "_ntype": "#ELEM", "name": "xs:element", "content": { "children":[], "attrs": [{"_ntype": "#ATTR", "name": "name", "value": "name" }, {"_ntype": "#ATTR", "name": "type", "value": "xs:token" }, {"_ntype": "#ATTR", "name": "minoccurs", "value": "0" }, {"_ntype": "#ATTR", "name": "maxoccurs", "value": "1" }] }}
+
+include "json2xml-schema"; makesimpleelement("name"; "0")
+{ "type": "string" }
+{ "_ntype": "#ELEM", "name": "xs:element", "content": { "children":[], "attrs": [{"_ntype": "#ATTR", "name": "name", "value": "name" }, {"_ntype": "#ATTR", "name": "type", "value": "xs:token" }, {"_ntype": "#ATTR", "name": "minoccurs", "value": "0" }] }}
+
+include "json2xml-schema"; makesimpleelement("name")
+{ "type": "string" }
+{ "_ntype": "#ELEM", "name": "xs:element", "content": { "children":[], "attrs": [{"_ntype": "#ATTR", "name": "name", "value": "name" }, {"_ntype": "#ATTR", "name": "type", "value": "xs:token" }] }}
+
+include "json2xml-schema"; makesimpleelement("name"; "0"; empty; "xs:positiveinteger")
+{ "type": "string" }
+{ "_ntype": "#ELEM", "name": "xs:element", "content": { "children":[], "attrs": [{"_ntype": "#ATTR", "name": "name", "value": "name" }, {"_ntype": "#ATTR", "name": "type", "value": "xs:positiveinteger" }, {"_ntype": "#ATTR", "name": "minoccurs", "value": "0" }] }}
+
