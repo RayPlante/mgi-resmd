@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$extensionSchemas": ["http://mgi.nist.gov/mgi-json-schema/v0.1"],
   "id": "http://mgi.nist.gov/json/res-md/v1.0wd",
+  "version": "0.8",
   "title": "Resource metadata type library",
   "description": "a library of schemas for describing resources in a data federation",
   "notes": [
@@ -9,6 +10,7 @@
       "This is based on VOResource v1.0"
   ],
   "definitions": {
+
     "Resource": {
         "description": "an identified, described, and discoverable component of the distributed data environment.",
         "type": "object",
@@ -20,14 +22,30 @@
                 ],
                 "$ref": "#/definitions/Identity"
             },
+
             "curation": {
                 "description": "Information regarding the general curation of the resource",
                 "$ref": "#/definitions/Curation"
             },
-            "curation": {
+
+            "content": {
                 "description": "Information regarding the general content of the resource",
                 "$ref": "#/definitions/Content"
             },
+
+            "role": {
+                "description": "A label that identifies the type of resource this is along with, if appropriate, a description of how this resource fulfills its role as a that type of resource.",
+                "notes": [
+                    "If this resource qualifies as being like multiple types of resources at a time (e.g. a registry and a repository), multiple role elements can be provided.",
+                    "Sub-classes of Role can define additional metadata for describing how it fulfills its role.  The $extensionSchemas attribute should be used to include this additional metadata."
+                ],
+                "type": "array",
+                "items": {
+                    "$ref": "#/definitions/Role"
+                },
+                "minItems": 1
+            },
+
             "applicability": {
                 "description": "Information describing the resource's applicability to a particular domain",
                 "notes": [ 
@@ -38,133 +56,35 @@
                     "$ref": "#/definitions/Applicability"
                 }
             },
-            "access": {
-                "description": "Information describing how to access the resource and its features and capabilities",
-                "$ref": "#/definitions/Access"
-            }
-        }
-    },
-    "Curation": {
-      "description": "Information regarding the general curation of a resource",
-      "type": "object",
-      "properties": {
-          "publisher": {
-              "$ref": "#/definitons/NameID",
-              "description": "the Entity (e.g. person or organisation) responsible for making the resource available."
-          },
-          "creator": {
-              "type": "array",
-              "items": { "$ref": "#/definitions/NameID" },
-              "description": "The entity (e.g. person or organization) primarily responsible for creating the content or constitution of the resource."
-          },
-          "contributor": {
-              "type": "array",
-              "items": { "$ref": "#/definitions/NameID" },
-              "description": "Entity responsible for contributions to the content of the resource"
-          },
-          "date": {
-              "type": "array",
-              "items": { "$ref": "#/definitions/RelevantDate" }, 
-              "description": "Date associated with an event in the life cycle of the resource.",
-              "notes": [ "This will typically be associated with the creation or availability (i.e., most recent release or version) of the resource.  Use the role attribute to clarify." ]
-          },
-          "contact": {
-              "type": "array",
-              "items": { "$ref": "#/definitions/Contact" },
-              "description": "Information that can be used for contacting someone with regard to this resource."
-          }
-      },
-      "equivalentTo": "http://mgi.nist.gov/xml/res-md/v0.1#Curation"
-    },
 
-    "RelevantDate": {
-      "description": "A date that played a particular role in the subject's lifecycle",
-      "type": "object",
-      "minProperties": 1,
-      "maxProperties": 1,
-      "patternProperties": { "^.*$": { "type": "string", "format": "date" }}
-    },
-
-    "NameID": {
-      "description": "a reference to something having a name and/or an identifier",
-      "notes": [ "This schema allows one to either provide just a human-readable name (as a string) or a name plus an identifier (as an array)."],
-      "oneOf": [
-          {
-              "type": "string",
-              "description": "A human-readable name or title for the entity being referenced"
-          },
-          {
-              "type": "array",
-              "items": [
-                  {
-                      "type": "string",
-                      "description": "A human-readable name or title for the entity being referenced"
-                  },
-                  {
-                      "$ref": "#/definitions/IdentifierInfo"
-                  }
-              ],
-              "additionalItems": { "$ref": "#/definitions/IdentifierInfo" }
-              
-          }
-      ]
-    },
-
-    "IdentifierInfo": {
-        "type": "object",
-        "properties": {
-            "id": {
-                "type": "string",
-                "format": "uri",
-                "description": "an identifier for the entity being referneced"
-            },
-            "scheme": {
-                "type": "string",
-                "description": "a label or identifier for the identifier system that the identifier complies with",
-                "notes": ["Use of this property is recommended when the identifier scheme is not obvious from the format of the identifier itself", "The value should be ignored if the id property is not given."]
+            "related": {
+                "description": "A reference to a related resource and the nature of the relationship",
+                "type": "array",
+                "items": {
+                    "$ref": "#/definitions/Related"
+                }
             }
         },
-        "dependencies": {
-            "scheme": [ "id" ]
-        },
-        "comments": ["This definition was inspired on the bioCADDIE identifier_info_schema"]
+        "required": [ "identity", "curation", "content", "role" ]
     },
 
-    "Contact": {
-      "description": "Information that can be used for contacting someone",
-      "type": "object",
-      "properties": {
-          "name": {
-              "$ref": "name-id_schema.json",
-              "description": "the name of the contact person or group",
-              "notes": [ "This can be a person's name, e.g. 'John P. Jones' or a group, 'Archinve Support Team'" ]
-          },
-          "postalAddress": {
-              "description": "the contact mailing address",
-              "notes": [ "All components of the mailing address are given in one string, e.g. '3700 San Martin Drive, Baltimore, MD 21218 USA'." ],
-              "type" : "string",
-              "comments": ["split this out?"]
-          },
-          "emailAddress": {
-              "description": "the contact email address",
-              "type" : "string",
-              "format": "email",
-              "recommended": true,
-              "comment": ["replace with more structure?"]
-          },
-          "phoneNumber": {
-              "description": "the contact telephone number",
-              "notes": [ "Complete international dialing codes should be given, e.g. '+1-410-338-1234'" ],
-              "type" : "string"
-          },
-          "timeZone": {
-              "description": "the time zone where the contact typically operates",
-              "type" : "string",
-              "pattern": "^[-+][0-9]{4}$"
-          }
-      },
-      "required": [ "name" ],
-      "equivalentTo": "http://mgi.nist.gov/xml/res-md/v0.1#Contact"
+    "AccessibleResource": {
+        "description": "a kind of resource that can be accessed as part of a federated data application",
+        "notes": [
+            "This typically refers to things like data and software that can be downloaded, accessed via an API or portal, or engaged using special software."
+        ],
+        "allOf": [
+            { "$ref": "#/definitions/Resource" },
+            { 
+                "properties": {
+                    "access": {
+                        "description": "Information describing how to access the resource and its features and capabilities",
+                        "$ref": "#/definitions/Access"
+                    }
+                }
+            }
+        ],
+        "required": [ "access" ]
     },
 
     "Identity": {
@@ -174,6 +94,10 @@
             "title": {
                 "type": "string",
                 "description": "the full name given to the resource"
+            },
+            "altTitle": {
+                "$ref": "#/definitions/AltTitle",
+                "description": "an additional name the resource is known by"
             },
             "shortName": {
                 "type": "string",
@@ -205,6 +129,258 @@
             }
         },
         "required": [ "title" ]
+    },
+
+    "AltTitle": {
+        "type": "object",
+        "properties": {
+            "type": { 
+                "type": "string",
+                "enum": [ "AlternativeTitle", "Subtitle", "TranslatedTitle" ],
+                "valueDocumentation": {
+                    "AlternativeTitle": {
+                        "description": "title value represents an alternate or often used title for the resource, but which is not its official or preferred title."
+                    },
+                    "Subtitle": {
+                        "description": "title value represents a secondary or subtitle for the resource"
+                    },
+                    "TranslatedTitle": {
+                        "description": "title value represents a title in an alternate language as given by the xml:lang attribute"
+                    }
+                }
+            },
+            "title": {
+                "type": "string",
+                "description": "the text that is the alternate title"
+            }
+        },
+        "required": [ "type", "title" ]
+    },
+
+    "Curation": {
+      "description": "Information regarding the general curation of a resource",
+      "type": "object",
+      "properties": {
+          "publisher": {
+              "$ref": "#/definitions/NameID",
+              "description": "the Entity (e.g. person or organisation) responsible for making the resource available."
+          },
+          "publicationYear": {
+              "type": "string",
+              "pattern": "^[0-9]{4}$",
+              "description": "The year that this resource was made available by the publisher."
+          },
+          "creator": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Person" },
+              "description": "The entity (e.g. person or organization) primarily responsible for creating the content or constitution of the resource."
+          },
+          "contributor": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Person" },
+              "description": "Entity responsible for contributions to the content of the resource"
+          },
+          "date": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Date" }, 
+              "description": "Date associated with an event in the life cycle of the resource.",
+              "notes": [ "This will typically be associated with the creation or availability (i.e., most recent release or version) of the resource.  Use the role attribute to clarify." ]
+          },
+          "contact": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Contact" },
+              "description": "Information that can be used for contacting someone with regard to this resource."
+          }
+      },
+      "equivalentTo": "http://mgi.nist.gov/xml/res-md/v0.1#Curation"
+    },
+
+    "Date": {
+        "type": "object",
+        "description": "A date that played a particular role in the subject's lifecycle",
+        "properties": {
+            "role": {
+                "type": "string",
+                "description": "A label indicating the role this date plays in the lifecycle of a resource.",
+                "notes": [
+                    "This generic type allows for arbitrary role values; however, when applicable, use of the types defined by DciteDate are preferred."
+                ]
+            },
+            "when": {
+                "type": "string", 
+                "description": "The actual date value",
+                "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2}(/[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?)?)?"
+            }
+        },
+        "required": [ "role", "when" ]
+    },
+
+    "DciteDate": {
+        "description": "A date for an event in the lifecycle of a resource corresponding to one of the Datacite (v3.1) date types.",
+        "allOf": [ 
+            { "$ref": "#/definitions/Date" },
+            {
+                "properties": {
+                    "role": {
+                        "$ref": "#/definitions/DciteDateType"
+                    }
+                }
+            }
+        ]
+    },
+
+    "DciteDateType": {
+        "type": "string",
+        "enum": [ "Created", "Issued", "Updated" ]
+    },
+
+    "RelevantDate": {
+      "description": "A date that played a particular role in the subject's lifecycle",
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 1,
+      "patternProperties": { "^.*$": { "type": "string", "format": "date" }}
+    },
+
+    "ShowNameID": {
+        "description": "a reference to something that having a name and an identifier",
+        "type": "object",
+        "properties": {
+            "show": {
+                "type": "string",
+                "description": "a human-readable name or title for the entity being referenced"
+            },
+            "pid": {
+                "type": "string",
+                "description": "An unambigous identifier for the intended entity having the name given by this element's value"
+            }
+        },
+        "required": [ "show" ]
+    },
+
+    "NameID": {
+      "description": "a reference to something having a name and/or an identifier",
+      "notes": [ "This schema allows one to either provide just a human-readable name (as a string) or a name plus an identifier (as an array)."],
+      "oneOf": [
+          {
+              "type": "string",
+              "description": "A human-readable name or title for the entity being referenced"
+          },
+          {
+              "$ref": "#/definitions/ShowNameID",
+              "description": "an object that can include the PID."
+          }
+      ]
+    },
+
+    "ShowPersonName": {
+        "description": "A representation of a person's name or position that can include a PID",
+        "notes": [
+            "The optional sur, given, and middle properties can be provided to help dissect the name when converting to other formats or renderings."
+        ],
+        "allOf": [ 
+            { "$ref": "#/definitions/ShowNameID" },
+            { 
+                "properties": {
+                    "sur": {
+                        "type": "string",
+                        "description": "The part of the person's name that should be considered the surname or family name."
+                    },
+                    "given": {
+                        "type": "string",
+                        "description": "The part of the person's name that should be considered the given or first name."
+                    },
+                    "middle": {
+                        "type": "string",
+                        "description": "The part of the person's name that should be considered the middle names or initials."
+                    }
+                }
+            }
+        ]
+    },
+
+    "PersonName": {
+        "description": "A representation of a person's name or position which may include a PID",
+        "oneOf": [
+            { 
+                "type": "string",
+                "description": "a simple pre-formatted representation"
+            },
+            { 
+                "$ref": "#/definitions/ShowPersonName",
+                "description": "an object version that breaks down the parts of a person's name"
+            }
+        ]
+    },
+
+    "Person": {
+        "type": "object",
+        "properties": {
+            "name": {
+                "$ref": "#/definitions/PersonName",
+                "description": "the name or title of the person or entity"
+            },
+            "affiliation": { 
+                "$ref": "#/definitions/NamePID"
+            }
+        }
+    },
+
+    "IdentifierInfo": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "format": "uri",
+                "description": "an identifier for the entity being referneced"
+            },
+            "scheme": {
+                "type": "string",
+                "description": "a label or identifier for the identifier system that the identifier complies with",
+                "notes": ["Use of this property is recommended when the identifier scheme is not obvious from the format of the identifier itself", "The value should be ignored if the id property is not given."]
+            }
+        },
+        "dependencies": {
+            "scheme": [ "id" ]
+        },
+        "comments": ["This definition was inspired on the bioCADDIE identifier_info_schema"]
+    },
+
+    "Contact": {
+      "description": "Information that can be used for contacting someone",
+      "type": "object",
+      "properties": {
+          "name": {
+              "$ref": "#/definitions/NameID",
+              "description": "the name of the contact person or group",
+              "notes": [ "This can be a person's name, e.g. 'John P. Jones' or a group, 'Archinve Support Team'" ]
+          },
+          "postalAddress": {
+              "description": "the contact mailing address",
+              "notes": [ "All components of the mailing address are given in one string, e.g. '3700 San Martin Drive, Baltimore, MD 21218 USA'." ],
+              "type" : "string",
+              "comments": ["split this out?"]
+          },
+          "emailAddress": {
+              "description": "the contact email address",
+              "type" : "string",
+              "format": "email",
+              "recommended": true,
+              "comment": ["replace with more structure?"]
+          },
+          "phoneNumber": {
+              "description": "the contact telephone number",
+              "notes": [ "Complete international dialing codes should be given, e.g. '+1-410-338-1234'" ],
+              "type" : "string"
+          },
+          "timeZone": {
+              "description": "the time zone where the contact typically operates",
+              "type" : "string",
+              "pattern": "^[-+][0-9]{4}$"
+          }
+      },
+      "required": [ "name" ],
+      "equivalentTo": "http://mgi.nist.gov/xml/res-md/v0.1#Contact"
     },
 
     "Content": {
@@ -270,12 +446,57 @@
         }
     },
 
+    "Role": {
+        "type": "object",
+        "description": "metadata describing the resource's role as a resource of a particular type.",
+        "notes": [
+            "This base type only specifies a type label (and possibly an identifier); however, this Role type can be extended to support additional metadata applicable only to particular resource types. "
+        ],
+        "properties": {
+            "type": {
+                "description": "a label that indicates the kind of resource it is",
+                "notes": [
+                    "This corresponds to the DC element, type.  Values may be drawn, for example, from the DCMI Type Vocabulary.",
+                    "This label may use any format or convention for these labels.  An $extensionSchemas property may be used to imply/enforce a particular format.",
+                    "A PID can be provided as an unambiguous identifier for the type having a defined meaning; for example, a DCMI Type Vocabulary URI like http://purl.org/dc/dcmitype/PhysicalObject can be given as a name."
+                ],
+                "$ref": "#/definitions/NameID"
+            }
+        }
+    },
+
     "Applicability": {
         "type": "object",
         "description": "metadata describing a resource's applicability to a particular domain",
         "notes":[
             "It is expected that an instance of this type will comply with a an extension of this type marked with the '$type' annotation." 
         ]
+    },
+
+    "Related": {
+        "type": "object",
+        "description": "metadata describing describing a relationship between resources",
+        "notes": [
+            "The subject of the relationship is the resource described by this record."
+        ],
+        "properties": {
+            "relationship": {
+                "description": "The kind of relationship given by a relationship name and, optionally, a URI",
+                "notes": [
+                    "It is recommended that these relationships be drawn from existing ontologies with corresponding URI identifiers.",
+                    "It is recommended that the value given in the element content be a displayable, human-friendly name for the relationship.  Subtypes (e.g. DciteRelation) can be used to provide a controlled name where a URI is not defined."
+                ],
+                "$ref": "#/definitions/NameID"
+            },
+            "resource": {
+                "description": "The other resource that this resource is related to.",
+                "notes": [
+                    "Multiple occurances can be provided to list all other resources that this resource has the given relationship with."
+                ],
+                "type": "array",
+                "items": { "$ref": "#/definitions/NameID" }
+            }
+        }
     },
 
     "Access": {
