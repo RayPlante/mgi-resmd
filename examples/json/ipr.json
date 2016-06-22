@@ -10,16 +10,22 @@
     },
     "curation": {
         "publisher": "NIST/MSED Center for Theoretical and Computational Materials Science (CTCMS)",
-        "creator": ["Chandler Becker"],
-        "contributor": ["Zachary Trautt"],
-        "date": [
-            { "creation":  "2008-04-01" }
+        "creator": [
+            { "name": "Chandler Becker" }
         ],
-        "contact": {
-            "name": "Zachary Trautt",
-            "emailAddress": "zachary.trautt@nist.gov",
-            "timeZone":  "-0500"
-        }
+        "contributor": [ { "name": "Zachary Trautt" } ],
+        "date": [
+            { "role": "Created",  "when":  "2008-04-01",
+              "$extensionSchemas": [ "http://mgi.nist.gov/json/res-md/v1.0wd#/definitions/DciteDate" ]
+            }
+        ],
+        "contact": [
+            {
+                "name": "Zachary Trautt",
+                "emailAddress": "zachary.trautt@nist.gov",
+                "timeZone":  "-0500"
+            }
+        ]
     },
     "content": {
         "type": "Repository",
@@ -35,11 +41,14 @@
         ],
         "referenceURL": "http://www.ctcms.nist.gov/potentials/",
         "referenceCitation":  [ 
-            [ "Becker, C.A. et al., 'Considerations for choosing and using force fields and interatomic potentials in materials science and engineering,' Current Opinion in Solid State and Materials Science, 17, 277-283 (2013).",
-              "doi:10.1016/j.cossms.2013.10.001" ]
+            {
+                "show": "Becker, C.A. et al., 'Considerations for choosing and using force fields and interatomic potentials in materials science and engineering,' Current Opinion in Solid State and Materials Science, 17, 277-283 (2013).",
+                "pid": "doi:10.1016/j.cossms.2013.10.001" 
+            }
         ],
-        "primaryAudience": [ "research" ]
+        "primaryAudience": "research"
     },
+    "role": [ { "type": "Collection: Repository" } ],
     "applicability": [
         {
             "$extensionSchemas": [ "ms:MaterialScience" ],
