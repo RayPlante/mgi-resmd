@@ -1,6 +1,8 @@
 """
 classes and functions for resolving namespace identifiers
 """
+from collections import MutableMapping
+
 class ScopedDict(MutableMapping):
     """
     a dictionary with hierarchical default values where the levels represent
@@ -72,8 +74,8 @@ class ScopedPropertyMap(object):
         else:
             return (self, pathlist)
 
-    def _split(path):
-        return path.split("/")
+    def _split(self, path):
+        return path.lstrip("/").split("/")
 
     def getTrackerFor(self, path):
         """
@@ -90,7 +92,7 @@ class ScopedPropertyMap(object):
         for node in rest:
             if not node: 
                 continue
-            nextdeeper = self.class(deepest._map)
+            nextdeeper = self.__class__(deepest._map)
             deepest._childscope[node] = nextdeeper
             deepest = nextdeeper
 
@@ -100,12 +102,80 @@ class ScopedPropertyMap(object):
         """
         return a mapping for the scope specified by the given path
         """
-        return getTrackerFor(path)._map
+        return self.getTrackerFor(path)._map
+
+    def setRootMapping(self, key, val):
+        """
+        set a key-value pair correspondig to the base or root scope 
+        """
+        self._map[key] = val
 
     def setMappingFor(self, key, val, path):
         """
         set a key-value pair correspondig to a scope specified by the given path
         """
         tracker = self.ensureTrackerFor(path)
-        tracker._map.set(key, val)
+        tracker.setRootMapping(key, val)
 
+class NamespaceMap(ScopedPropertyMap):
+    """
+    a class for tracking namespace prefix definitions.  This is an extension
+    of ScopedPropertyMap that adds functions for setting/retrieving prefix
+    definitions in the language of namespaces.
+
+    When this class is used with JSON Schema-compliant JSON documents, a 
+    prefix, p, should be given a definition such that when the prefix in the 
+    abbreviation, p:node, is replaced with its URI, the resulting URI is a 
+    compliant JSON Pointer to node in the referenced JSON document.
+    """
+
+    def definePrefix(self, prefix, uri, path="/"):
+        """
+        define a prefix-namespace URI mapping with a scope defined by the 
+        given path.
+
+        :argument str prefix   the prefix being defined
+        :argument str uri      the namespace URI that the prefix represents.
+        :argument str path     the scope corresponding to a path into the 
+                                 associated document; the default is the root
+                                 of the document.
+        """
+        self.setMappingFor(prefix, uri, path)
+
+    def getURI(self, prefix, path="/"):
+        """
+        return the namespace URI corresponding to the given prefix at a 
+        given scope
+        :argument str prefix   the namespace prefix of interest
+        :argument str path     the scope corresponding to a path into the 
+                                 associated document; the default is the root
+                                 of the document.
+        """
+        return self.getMapFor(path).get(prefix)
+
+    def expandURI(self, uri, path="/"):
+        """
+        expand an abbreviated URI by replacing its prefix with its definition.
+        If the there is no prefix or a definition for the prefix is not found,
+        the original URI is returned unchange.  
+
+        Note that it will attempt to replace an "http:" at the beginning of a
+        given URI.  As long as there is no prefix "http" defined, the URI will
+        be returned unchanged.
+
+        :argument str uri      the abbreviated URI to expand
+        :argument str path     the path into the document that defines the 
+                               scope for prefix definitions.
+        """
+        if not uri:
+            return uri
+
+        parts = uri.split(':', 1)
+        if len(parts) > 1:
+            baseuri = self.getURI(parts[0], path)
+            if baseuri:
+                uri = baseuri + parts[1]
+
+        return uri
+
+    

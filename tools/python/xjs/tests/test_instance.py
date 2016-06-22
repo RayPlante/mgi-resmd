@@ -2,6 +2,7 @@
 from __future__ import with_statement
 import json, os, pytest, shutil
 from cStringIO import StringIO
+import pytest
 
 import xjs.instance as instance
 
@@ -96,20 +97,26 @@ class TestInstance(object):
     def test_find_extend_objs(self):
         inst = instance.Instance.from_location(exfile)
 
-        found = inst.find_extended_objs()
-        found = dict(found)
+        foundobjs = inst.find_extended_objs()
+        found = {}
+        for item in foundobjs:
+            found[item[0]] = (item[1], item[2])
 
         path = "/"
         assert path in found
-        assert isinstance(found[path], dict)
-        assert instance.EXTSCHEMAS in found[path]
-        assert len(found[path][instance.EXTSCHEMAS]) == 1
-        assert "ms:Database" in found[path][instance.EXTSCHEMAS]
+        assert isinstance(found[path][1], dict)
+        assert instance.EXTSCHEMAS in found[path][1]
+        assert len(found[path][1][instance.EXTSCHEMAS]) == 1
+        assert "ms:Database" in found[path][1][instance.EXTSCHEMAS]
+        assert "ms:Database" not in found[path][0]
+        assert (inst.data[instance.NS]['ms'] + "Database") in found[path][0]
         path = "/applicability/0"
-        assert isinstance(found[path], dict)
-        assert instance.EXTSCHEMAS in found[path]
-        assert "ms:MaterialScience" in found[path][instance.EXTSCHEMAS]
-        assert len(found[path][instance.EXTSCHEMAS]) == 1
+        assert isinstance(found[path][1], dict)
+        assert instance.EXTSCHEMAS in found[path][1]
+        assert "ms:MaterialScience" in found[path][1][instance.EXTSCHEMAS]
+        assert "ms:MaterialScience" not in found[path][0]
+        assert (inst.data[instance.NS]['ms'] + "MaterialScience") in found[path][0]
+        assert len(found[path][1][instance.EXTSCHEMAS]) == 1
 
     def test_extract(self):
         inst = instance.Instance.from_location(exfile)

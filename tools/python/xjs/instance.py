@@ -8,7 +8,10 @@ import os, json, jsonspec.pointer
 from urlparse import urlparse
 from urllib2 import urlopen
 
+from .namespace import NamespaceMap
+
 EXTSCHEMAS = "$extensionSchemas"
+NS = "$ns"
 
 class Instance(object):
     """
@@ -16,7 +19,7 @@ class Instance(object):
     of extended JSON schemas
     """
 
-    def __init__(self, data, srcloc=None, srcid=None, jptr="/"):
+    def __init__(self, data, srcloc=None, srcid=None, jptr="/", **kws):
         """
         initialize the Instance wrapper
 
@@ -44,6 +47,7 @@ class Instance(object):
         self._srcid = srcid
         self._srcloc = srcloc
         self._ptr = jptr
+        self._nsmap = kws.get('namespaces')
 
         if isinstance(self.data, dict):
             if not self._srcid:
@@ -168,19 +172,51 @@ class Instance(object):
 
     def find_extended_objs(self):
         """
-        return a list of pointer-object tuples that contain a property having
-        the given name
+        return a list of pointer-extension schema-object (3-) tuples for 
+        objects marked as being commpliant with extension schemas.
         
-        This function is equivalent to 
-        self.find_obj_by_prop("$extendedSchemas").  That is, it returns all
-        objects (including the root object, if applicable) that contains 
-        the "$exendedSchemas" property.  
+        This function finds all objects within this instance that contains
+        an "$extensionSchemas" property.  For each object found a 3-tuple is 
+        returned where the first element is the JSON pointer to the object.
+        The second element is the list of extension URIs found in the object's
+        "$extensionSchemas" property.  Note that URIs can be represented in 
+        this property in an abbreviated form using namespace prefixes as 
+        defined in "$ns" properties; for the URIs returned in the second element
+        in the tuple, the prefixes will have been replaced by their definitions.
+        The last element in the tuple is the object itself.  
         """
-        return self.find_obj_by_prop(EXTSCHEMAS)
+        nsmap = self.getNamespaceMap()
+        pathobjs = self.find_obj_by_prop(EXTSCHEMAS)
+        out = []
+        for item in pathobjs:
+            xschemas = []
+            for uri in item[1][EXTSCHEMAS]:
+                xschemas.append(nsmap.expandURI(uri))
+            out.append( (item[0], xschemas, item[1]) )
+
+        return out
 
     def extract(self, jptr):
         """
         return the data pointed to by given JSON Pointer
         """
         return jsonspec.pointer.extract(self.data, jptr)
+
+    def _load_namespaces(self):
+        if self._nsmap:
+            return
+
+        self._nsmap = NamespaceMap()
+        nsdefs = dict(self.find_obj_by_prop(NS))
+        for ptr in nsdefs:
+            map = self._nsmap.getMapFor(ptr)
+            for prefix in nsdefs[ptr][NS]:
+                map[prefix] = nsdefs[ptr][NS][prefix]
+
+    def getNamespaceMap(self):
+        """
+        return the namespace map for this instance
+        """
+        self._load_namespaces()
+        return self._nsmap
 

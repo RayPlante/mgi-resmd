@@ -3,6 +3,9 @@
     "identity": {
         "title": "Goofy"
     },
+    "curation": {  },
+    "content": {  },
+    "role": [{ "type": "Cartoon Character" }],
     "accessiblity": [
         {
             "$extensionSchemas": [ "urn:unresolvable.json" ]

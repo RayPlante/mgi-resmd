@@ -68,14 +68,13 @@ class ExtValidator(object):
             if self.is_extschema_schema(instance):
                 # since EXTSCHEMA_URIS defines the EXTSCHEMAS property,
                 # we need to handle it a little differently
-                extensions = { "/": instance }
+                extensions = [ ("/",  instance[EXTSCHEMAS], instance) ]
             else: 
                 inst = Instance(instance)
-                extensions = dict(inst.find_extended_objs())
+                extensions = inst.find_extended_objs()
 
-            for ptr in extensions:
-                self.validate_against(extensions[ptr], 
-                                      extensions[ptr][EXTSCHEMAS], strict)
+            for node in extensions:
+                self.validate_against(node[2], node[1], strict)
             
 
     def validate_against(self, instance, schemauris=[], strict=False):
