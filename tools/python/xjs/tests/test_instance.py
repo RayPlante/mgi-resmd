@@ -49,7 +49,7 @@ class TestInstance(object):
         assert len(found[0][1]) >= 5
 
         found = inst.find_data_by_name(instance.EXTSCHEMAS)
-        assert len(found) == 2
+        assert len(found) == 3
         assert len(found[0]) == 2
 
         found = dict(found)
@@ -78,7 +78,7 @@ class TestInstance(object):
         assert len(found[0][1]['subject']) >= 5
 
         found = inst.find_obj_by_prop(instance.EXTSCHEMAS)
-        assert len(found) == 2
+        assert len(found) == 3
         assert len(found[0]) == 2
 
         found = dict(found)
@@ -126,7 +126,7 @@ class TestInstance(object):
         assert "metals" in data
         assert len(data) >= 5
 
-        assert inst.extract("/curation/contact/name") == "Zachary Trautt"
+        assert inst.extract("/curation/contact/0/name") == "Zachary Trautt"
         assert inst.extract("/applicability/0/materialType/0") == \
             "non-specific"
 
