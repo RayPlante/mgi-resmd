@@ -4,7 +4,7 @@
         "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
         "owl": "http://www.w3.org/2002/07/owl#",
         "skos": "http://www.w3.org/2004/02/skos/core#",
-        "psch": "http://www.nist.gov/dp/di/ont/pod-onto.json#"
+        "psch": "http://www.nist.gov/dp/di/ont/pod-onto.json#",
 
         "isDefinedBy": "rdfs:isDefinedBy",
         "prefLabel": "owl:prefLabel",
@@ -25,7 +25,7 @@
     "prefLabel": "psch",
     "isDefinedBy": [
         {
-            "@type": "owl:Class"
+            "@type": "owl:Class",
             "@id": "psch:ProfileSchema",
             "subClassOf": "owl:Ontology",
             "definition": "An ontology that can be expressed as a profile on existing ontologies by virtue of the fact that all Classes and Properties are equivalent to Classes and Properties in existing source ontologies, apart from possible restrictions on the value ranges",
