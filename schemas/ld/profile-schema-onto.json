@@ -21,7 +21,7 @@
         "referenceProperty": "psch:referenceProperty"
     },
     "@type": "owl:Ontology",
-    "@id": "http://www.nist.gov/di/ont/onto.json",
+    "@id": "http://www.nist.gov/dp/di/ont/pod-onto.json",
     "prefLabel": "psch",
     "isDefinedBy": [
         {
