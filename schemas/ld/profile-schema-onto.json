@@ -30,20 +30,23 @@
             "subClassOf": "owl:Ontology",
             "definition": "An ontology that can be expressed as a profile on existing ontologies by virtue of the fact that all Classes and Properties are equivalent to Classes and Properties in existing source ontologies, apart from possible restrictions on the value ranges",
             "notes": [
-                "the referenceClass and referenceProperty give the specific things that a Class or Property is the prefered equivalent thing.  In a JSON-LD context, a label should resolve to the specified reference class or property"
+                "the referenceClass and referenceProperty give the specific things that the defined Class or Property is preferentially equivalent to.  In a JSON-LD context, a property label should resolve via the context to the specified reference property."
             ]
         },
         {
             "@type": "owl:ObjectProperty",
             "@id": "psch:referenceClass",
             "subClassOf": "owl:equivalentClass",
-            "definition": "The preferred class to use to identifying a label when the ontology is being used a profile"
+            "definition": "The preferred class to associate with the subject class as its semantic equivalent"
         },
         {
             "@type": "owl:ObjectProperty",
             "@id": "psch:referenceProperty",
             "subClassOf": "owl:equivalentProperty",
-            "definition": "The preferred property to use to identifying a label when the ontology is being used a profile"
+            "definition": "The preferred property to associate with the subject property as its semantic equivalent",
+            "notes": [
+                "In a JSON-LD context, the object property to associate with the subject property via a label mapping."
+            ]
         }
     ]
 }
