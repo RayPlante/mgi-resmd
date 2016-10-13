@@ -1,0 +1,49 @@
+{
+    "@context": {
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "skos": "http://www.w3.org/2004/02/skos/core#",
+        "psch": "http://www.nist.gov/dp/di/ont/pod-onto.json#"
+
+        "isDefinedBy": "rdfs:isDefinedBy",
+        "prefLabel": "owl:prefLabel",
+        "altLabel": "owl:altLabel",
+        "hiddenLabel": "owl:hiddenLabel",
+        "definition": "skos:definition",
+        "notes": "skos:note",
+        "equivalentClass": "owl:equivalentClass",
+        "equivalentProperty": "owl:equivalentProperty",
+        "subClassOf": "rdfs:subClassOf",
+        "imports": "owl:imports",
+
+        "referenceClass": "psch:referenceClass",
+        "referenceProperty": "psch:referenceProperty"
+    },
+    "@type": "owl:Ontology",
+    "@id": "http://www.nist.gov/di/ont/onto.json",
+    "prefLabel": "psch",
+    "isDefinedBy": [
+        {
+            "@type": "owl:Class"
+            "@id": "psch:ProfileSchema",
+            "subClassOf": "owl:Ontology",
+            "definition": "An ontology that can be expressed as a profile on existing ontologies by virtue of the fact that all Classes and Properties are equivalent to Classes and Properties in existing source ontologies, apart from possible restrictions on the value ranges",
+            "notes": [
+                "the referenceClass and referenceProperty give the specific things that a Class or Property is the prefered equivalent thing.  In a JSON-LD context, a label should resolve to the specified reference class or property"
+            ]
+        },
+        {
+            "@type": "owl:ObjectProperty",
+            "@id": "psch:referenceClass",
+            "subClassOf": "owl:equivalentClass",
+            "definition": "The preferred class to use to identifying a label when the ontology is being used a profile"
+        },
+        {
+            "@type": "owl:ObjectProperty",
+            "@id": "psch:referenceProperty",
+            "subClassOf": "owl:equivalentProperty",
+            "definition": "The preferred property to use to identifying a label when the ontology is being used a profile"
+        }
+    ]
+}
