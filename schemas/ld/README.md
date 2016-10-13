@@ -5,7 +5,7 @@ support for resource metadata using JSON-LD.
 
 ## Motivation
 
-Another emerging technique encoding and transmitting metadata is using
+Another emerging technique for encoding and transmitting metadata is using
 JSON-LD.  This format allows one to connect a piece of metadata (its
 label and value) to an existing term in an existing, defined "vocabulary".  A
 defined vocabulary is normally either an ontology defined with OWL or
@@ -20,8 +20,8 @@ resource, one can typically make an appropriate statement using the
 necssary property from the ontology, independent of any other
 properties.  Nevertheless, some applications--like repositories--need
 to support the concept of a complete, validate-able, and standardized
-records describing a resource.  This has led to a type of schema I
-would call a _profile schema_ for metadata stored in a JSON-LD
+record describing a resource.  This has led to a type of schema I
+call a _profile schema_ for metadata stored in a JSON-LD
 document; examples include the DCAT schema, the US POD schema, and the
 HCLS Data Description Profile.  
 
@@ -34,7 +34,7 @@ are required, optional, or can have multiple values
 (i.e. cardinality).  The advantage of JSON-LD and the profile schema
 is in providing a stricter syntax for describing a resource completely
 while remaining compatible with the Linked Data and Semmantic Web
-world.  
+worlds.  
 
 Profile schema definitions typically are in the form of a
 human-readable document (though it is usually accompanied by a JSON-LD
