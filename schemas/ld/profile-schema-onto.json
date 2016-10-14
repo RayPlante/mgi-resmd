@@ -16,6 +16,8 @@
         "equivalentProperty": "owl:equivalentProperty",
         "subClassOf": "rdfs:subClassOf",
         "imports": "owl:imports",
+        "domain": "rdfs:domain",
+        "range": "rdfs:range",
 
         "referenceClass": "psch:referenceClass",
         "referenceProperty": "psch:referenceProperty"
