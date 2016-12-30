@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://schema.nist.gov/xml/vocabtest" 
+           xmlns="http://www.w3.org/2001/XMLSchema" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns:tv="http://schema.nist.gov/xml/tieredvocab/1.0wd" 
+           xmlns:vt="http://schema.nist.gov/xml/vocabtest" 
+           xmlns:am="http://schema.nist.gov/xml/mgi.schema.annot" 
+           elementFormDefault="unqualified" 
+           attributeFormDefault="unqualified" version="0.1">
+
+   <xs:import namespace="http://schema.nist.gov/xml/tieredvocab/1.0wd"
+              schemaLocation="tiered-vocab.xsd"/>
+
+   <xs:element name="MaterialType" type="vt:MaterialType"/>
+
+   <xs:complexType name="MaterialType" abstract="true">
+     <xs:annotation>
+       <xs:documentation>
+         A 2-level vocabulary for describing material types
+       </xs:documentation>
+     </xs:annotation>
+
+     <xs:complexContent>
+       <xs:restriction base="tv:TwoTieredVocabulary">
+         <xs:sequence>
+           <xs:element name="t" type="vt:MaterialTypeL1"
+                       minOccurs="1" maxOccurs="1"/>
+           <xs:element name="t2" type="xs:token"
+                       minOccurs="0" maxOccurs="1"/>
+         </xs:sequence>
+       </xs:restriction>
+     </xs:complexContent>
+   </xs:complexType>
+
+   <xs:complexType name="Ceramics">
+     <xs:annotation>
+       <xs:documentation>
+         A 2-level vocabulary for describing material types
+       </xs:documentation>
+     </xs:annotation>
+
+     <xs:complexContent>
+       <xs:restriction base="vt:MaterialType">
+         <xs:sequence>
+           <xs:element name="t" type="vt:MaterialTypeL1"
+                       minOccurs="1" maxOccurs="1" fixed="Ceramics"/>
+           <xs:element name="t2" type="vt:CeramicsType"
+                       minOccurs="0" maxOccurs="1"/>
+         </xs:sequence>
+       </xs:restriction>
+
+     </xs:complexContent>
+   </xs:complexType>
+
+   <xs:simpleType name="MaterialTypeL1">
+     <xs:restriction base="xs:token">
+       <xs:enumeration value="Ceramics"/>
+       <xs:enumeration value="Metals and alloys"/>
+       <xs:enumeration value="Metamaterials"/>
+     </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="CeramicsType">
+     <xs:restriction base="xs:token">
+       <xs:enumeration value="Perovskite"/>
+       <xs:enumeration value=""/>
+     </xs:restriction>
+   </xs:simpleType>
+
+</xs:schema>
