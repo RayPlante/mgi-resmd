@@ -1,0 +1,2 @@
+http://schema.nist.gov/xml/tieredvocab/1.0wd tiered-vocab.xsd
+http://schema.nist.gov/xml/vocabtest vocabtest.xsd

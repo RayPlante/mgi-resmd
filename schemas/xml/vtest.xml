@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vt:MaterialType xmlns="" xsi:type="vt:Ceramics"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:tv="http://schema.nist.gov/xml/tieredvocab/1.0wd" 
+           xmlns:vt="http://schema.nist.gov/xml/vocabtest" 
+           xsi:schemaLocation="http://schema.nist.gov/xml/tieredvocab/1.0wd
+                               tiered-vocab.xsd
+                               http://schema.nist.gov/xml/vocabtest
+                               vocabtest.xsd">
+
+  <t> Ceramics </t>
+  <t> Perovskite </t>
+</vt:MaterialType>
